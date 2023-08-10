@@ -25,14 +25,14 @@ export class TransactionService {
   }
 
   async createTransaction(userId: string, dto: CreateTransactionDto) {
-    const Transaction = await this.prismaService.transaction.create({
+    const transaction = await this.prismaService.transaction.create({
       data: {
         userId,
         ...dto,
       },
     });
 
-    return Transaction;
+    return transaction;
   }
 
   async editTransactionById(
@@ -49,7 +49,9 @@ export class TransactionService {
 
     // check if user owns the Transaction
     if (!transaction || transaction.userId !== userId)
-      throw new ForbiddenException("Access to resources denied");
+      throw new ForbiddenException(
+        "Access to resources is denied or not found"
+      );
 
     return this.prismaService.transaction.update({
       where: {
@@ -70,7 +72,9 @@ export class TransactionService {
 
     // check if user owns the Transaction
     if (!Transaction || Transaction.userId !== userId)
-      throw new ForbiddenException("Access to resources denied");
+      throw new ForbiddenException(
+        "Access to resources is denied or not found"
+      );
 
     await this.prismaService.transaction.delete({
       where: {
