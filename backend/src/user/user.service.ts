@@ -1,33 +1,33 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { EditUserDto } from './dto';
-import { User } from '@prisma/client';
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "../prisma/prisma.service";
+import { EditUserDto } from "./dto";
+import { User } from "@prisma/client";
 
 @Injectable()
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
-  async getUserById(userId: number): Promise<User | null> {
+  async getUserById(userId: string): Promise<User | null> {
     const user = await this.prisma.user.findUnique({
       where: {
-        id: userId,
+        userId: userId,
       },
     });
-    delete user.hash;
+    delete user.password;
     return user;
   }
 
-  async editUser(userId: number, dto: EditUserDto) {
+  async editUser(userId: string, dto: EditUserDto) {
     const user = await this.prisma.user.update({
       where: {
-        id: userId,
+        userId: userId,
       },
       data: {
         ...dto,
       },
     });
 
-    delete user.hash;
+    delete user.password;
 
     return user;
   }
