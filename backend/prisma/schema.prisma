@@ -27,6 +27,7 @@ model Transaction {
   updatedAt     DateTime @updatedAt
   category      String
   amount        Float
+  title         String   
   user          User     @relation(fields: [userId], references: [userId]) // Define the relationship
 
   @@map(name: "transactions")
