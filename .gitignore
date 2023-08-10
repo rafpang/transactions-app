@@ -2,3 +2,4 @@ backend/node_modules/
 backend/.env
 backend/dist/
 docker-compose.yaml
+frontend/node_modules/
