@@ -15,6 +15,24 @@ export class AuthService {
     private config: ConfigService
   ) {}
 
+  async signToken(
+    userId: string,
+    email: string
+  ): Promise<{ access_token: string }> {
+    const payload = {
+      sub: userId,
+      email,
+    };
+
+    const token = await this.jwt.signAsync(payload, {
+      expiresIn: "15m",
+      secret: this.config.get("JWT_SECRET"),
+    });
+
+    return {
+      access_token: token,
+    };
+  }
   async signup(dto: AuthDto) {
     const hash = await argon.hash(dto.password);
 
@@ -50,24 +68,5 @@ export class AuthService {
 
     if (!pwMatches) throw new ForbiddenException("Credentials incorrect");
     return this.signToken(user.userId, user.email);
-  }
-
-  async signToken(
-    userId: string,
-    email: string
-  ): Promise<{ access_token: string }> {
-    const payload = {
-      sub: userId,
-      email,
-    };
-
-    const token = await this.jwt.signAsync(payload, {
-      expiresIn: "15m",
-      secret: this.config.get("JWT_SECRET"),
-    });
-
-    return {
-      access_token: token,
-    };
   }
 }
