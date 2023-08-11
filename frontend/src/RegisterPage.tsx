@@ -3,12 +3,17 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import { LoggedInAtom } from "./loggedInAtom";
+
+import Cookies from "js-cookie";
+import axios from "axios";
+import { useAtom } from "jotai";
 
 function Copyright(props: any) {
   return (
@@ -19,7 +24,6 @@ function Copyright(props: any) {
       {...props}
     >
       {"Copyright © "}
-
       {new Date().getFullYear()}
       {"."}
     </Typography>
@@ -27,11 +31,31 @@ function Copyright(props: any) {
 }
 
 export default function RegisterPage() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const [isLoggedIn, setIsLoggedIn] = useAtom(LoggedInAtom);
+  const navigate = useNavigate();
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const email = data.get("email");
     const password = data.get("password");
+
+    try {
+      const response = await axios.post("http://localhost:3333/auth/signup", {
+        email,
+        password,
+      });
+      const accessToken = response.data.access_token;
+      const expirationTimeInSeconds = 15 * 60;
+      Cookies.set("access_token", accessToken, {
+        expires: expirationTimeInSeconds / (60 * 60 * 24),
+      });
+      setIsLoggedIn(true);
+      if (isLoggedIn === true) navigate("/");
+    } catch (error) {
+      setIsLoggedIn(false);
+      console.error("Error during signup:", error);
+    }
   };
 
   return (
