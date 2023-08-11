@@ -84,7 +84,7 @@ export default function HomePage() {
         variant="contained"
         onClick={handleClickOpen}
       >
-        Open form dialog
+        Add Transaction
       </Button>
       <AddTransactionModal
         openModal={openModal}
