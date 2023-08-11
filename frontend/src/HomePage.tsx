@@ -6,7 +6,7 @@ import Button from "@mui/material/Button";
 import Cookies from "js-cookie";
 
 import DataTable from "./components/DataTable";
-import { Container } from "@mui/material";
+import { Container, Divider, Stack } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -55,10 +55,10 @@ export default function HomePage() {
     // Add more placeholder data as needed
   ];
 
-  function handleLogout() {
+  const handleLogout = () => {
     Cookies.remove("access_token");
     setIsLoggedIn(false);
-  }
+  };
 
   const [openModal, setOpenModal] = useState(false);
 
@@ -76,16 +76,30 @@ export default function HomePage() {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        justifyContent: "center",
         gap: 2,
       }}
     >
-      <Button
-        sx={{ width: "200px" }}
-        variant="contained"
-        onClick={handleClickOpen}
+      <Stack
+        direction={{ xs: "column", sm: "row" }}
+        spacing={{ xs: 2, sm: 13, md: 14 }}
       >
-        Add Transaction
-      </Button>
+        <Button
+          sx={{ width: "200px" }}
+          variant="contained"
+          onClick={handleClickOpen}
+        >
+          Add Transaction
+        </Button>
+        <Button
+          sx={{ width: "200px" }}
+          variant="contained"
+          onClick={handleLogout}
+          color="error"
+        >
+          Logout
+        </Button>
+      </Stack>
       <AddTransactionModal
         openModal={openModal}
         handleClose={handleClose}
