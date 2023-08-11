@@ -45,11 +45,15 @@ export default function RegisterPage() {
     const data = new FormData(event.currentTarget);
     const email = data.get("email");
     const password = data.get("password");
+    const firstName = data.get("firstName") ? data.get("firstName") : null;
+    const lastName = data.get("lastName") ? data.get("lastName") : null;
 
     try {
       const response = await axios.post("http://localhost:3333/auth/signup", {
         email,
         password,
+        firstName,
+        lastName,
       });
       const accessToken = response.data.access_token;
       const expirationTimeInSeconds = 15 * 60;
@@ -85,7 +89,6 @@ export default function RegisterPage() {
               <TextField
                 autoComplete="given-name"
                 name="firstName"
-                required
                 fullWidth
                 id="firstName"
                 label="First Name"
@@ -94,7 +97,6 @@ export default function RegisterPage() {
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
-                required
                 fullWidth
                 id="lastName"
                 label="Last Name"
