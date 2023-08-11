@@ -57,10 +57,8 @@ export default function LoginPage() {
         expires: expirationTimeInSeconds / (60 * 60 * 24),
       });
       setIsLoggedIn(true);
-      console.log(isLoggedIn);
     } catch (error) {
       setIsLoggedIn(false);
-      console.error("Error during signup:", error);
     }
   };
   return (
