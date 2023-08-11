@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useEffect } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -34,6 +34,12 @@ export default function RegisterPage() {
   const [isLoggedIn, setIsLoggedIn] = useAtom(LoggedInAtom);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/");
+    }
+  }, [isLoggedIn]);
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -51,7 +57,7 @@ export default function RegisterPage() {
         expires: expirationTimeInSeconds / (60 * 60 * 24),
       });
       setIsLoggedIn(true);
-      if (isLoggedIn === true) navigate("/");
+      console.log(isLoggedIn);
     } catch (error) {
       setIsLoggedIn(false);
       console.error("Error during signup:", error);

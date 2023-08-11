@@ -1,14 +1,18 @@
-import * as React from "react";
+import { useEffect } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import axios from "axios";
+import Cookies from "js-cookie";
+import { useAtom } from "jotai";
+import { LoggedInAtom } from "./loggedInAtom";
 
 function Copyright(props: any) {
   return (
@@ -27,15 +31,38 @@ function Copyright(props: any) {
 }
 
 export default function LoginPage() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const [isLoggedIn, setIsLoggedIn] = useAtom(LoggedInAtom);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/");
+    }
+  }, [isLoggedIn]);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const email = data.get("email");
     const password = data.get("password");
-    console.log(email);
-    console.log(password);
-  };
 
+    try {
+      const response = await axios.post("http://localhost:3333/auth/signin", {
+        email,
+        password,
+      });
+      const accessToken = response.data.access_token;
+      const expirationTimeInSeconds = 15 * 60;
+      Cookies.set("access_token", accessToken, {
+        expires: expirationTimeInSeconds / (60 * 60 * 24),
+      });
+      setIsLoggedIn(true);
+      console.log(isLoggedIn);
+    } catch (error) {
+      setIsLoggedIn(false);
+      console.error("Error during signup:", error);
+    }
+  };
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
