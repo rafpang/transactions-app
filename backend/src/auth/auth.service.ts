@@ -15,7 +15,7 @@ export class AuthService {
     private config: ConfigService
   ) {}
 
-  async signToken(
+  private async signToken(
     userId: string,
     email: string
   ): Promise<{ access_token: string }> {
@@ -33,7 +33,7 @@ export class AuthService {
       access_token: token,
     };
   }
-  async signup(dto: AuthDto) {
+  public async signup(dto: AuthDto) {
     const hash = await argon.hash(dto.password);
 
     try {
@@ -55,7 +55,7 @@ export class AuthService {
     }
   }
 
-  async signin(dto: AuthDto) {
+  public async signin(dto: AuthDto) {
     const user = await this.prisma.user.findFirst({
       where: {
         email: dto.email,
