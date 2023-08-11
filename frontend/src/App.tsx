@@ -16,7 +16,7 @@ export default function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/" element={<HomePage />} />
-          </Routes>{" "}
+          </Routes>
         </BrowserRouter>
       </ThemeProvider>
     </JotaiProvider>
