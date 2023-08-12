@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -11,8 +11,6 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { useAtom } from "jotai";
-import { LoggedInAtom } from "./loggedInAtom";
 
 function Copyright(props: any) {
   return (
@@ -23,7 +21,6 @@ function Copyright(props: any) {
       {...props}
     >
       {"Copyright © "}
-
       {new Date().getFullYear()}
       {"."}
     </Typography>
@@ -31,16 +28,17 @@ function Copyright(props: any) {
 }
 
 export default function LoginPage() {
-  const [isLoggedIn, setIsLoggedIn] = useAtom(LoggedInAtom);
+  const [errorLogin, setErrorLogin] = useState<boolean>(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isLoggedIn) {
+    const authCookie = Cookies.get("access_token");
+    if (authCookie) {
       navigate("/");
     }
-  }, [isLoggedIn]);
+  }, []);
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const email = data.get("email");
@@ -56,11 +54,12 @@ export default function LoginPage() {
       Cookies.set("access_token", accessToken, {
         expires: expirationTimeInSeconds / (60 * 60 * 24),
       });
-      setIsLoggedIn(true);
+      navigate("/");
     } catch (error) {
-      setIsLoggedIn(false);
+      setErrorLogin(true);
     }
-  };
+  }
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -78,6 +77,15 @@ export default function LoginPage() {
         <Typography component="h1" variant="h5">
           Login
         </Typography>
+        {errorLogin === true ? (
+          <Typography
+            sx={{ fontSize: 12, color: "red", mt: 2 }}
+            component="h1"
+            variant="h5"
+          >
+            Invalid Credentials!
+          </Typography>
+        ) : null}
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
           <Grid container spacing={2}>
             <Grid item xs={12}>

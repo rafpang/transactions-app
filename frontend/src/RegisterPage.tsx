@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -9,11 +9,8 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { LoggedInAtom } from "./loggedInAtom";
-
 import Cookies from "js-cookie";
 import axios from "axios";
-import { useAtom } from "jotai";
 
 function Copyright(props: any) {
   return (
@@ -31,14 +28,15 @@ function Copyright(props: any) {
 }
 
 export default function RegisterPage() {
-  const [isLoggedIn, setIsLoggedIn] = useAtom(LoggedInAtom);
+  const [registerError, setRegisterError] = useState<boolean>(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isLoggedIn) {
+    const authCookie = Cookies.get("access_token");
+    if (authCookie) {
       navigate("/");
     }
-  }, [isLoggedIn]);
+  }, []);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -60,9 +58,8 @@ export default function RegisterPage() {
       Cookies.set("access_token", accessToken, {
         expires: expirationTimeInSeconds / (60 * 60 * 24),
       });
-      setIsLoggedIn(true);
     } catch (error) {
-      setIsLoggedIn(false);
+      setRegisterError(true);
     }
   };
 
@@ -83,6 +80,15 @@ export default function RegisterPage() {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
+        {registerError === true ? (
+          <Typography
+            sx={{ fontSize: 12, color: "red", mt: 2 }}
+            component="h1"
+            variant="h5"
+          >
+            Error registering! Please try again
+          </Typography>
+        ) : null}
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>

@@ -1,5 +1,3 @@
-import { useAtom } from "jotai";
-import { LoggedInAtom } from "./loggedInAtom";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
@@ -14,22 +12,20 @@ import StatCard from "./components/StatCard";
 import axios from "axios";
 
 export default function HomePage() {
-  const [isLoggedIn, setIsLoggedIn] = useAtom(LoggedInAtom);
   const [transactions, setTransactions] = useState([]);
+  const [openModal, setOpenModal] = useState(false);
+
   const navigate = useNavigate();
 
-  // Login useEffect
   useEffect(() => {
-    if (isLoggedIn === false) {
+    const authCookie = Cookies.get("access_token");
+    if (!authCookie) {
       navigate("/login");
+      return;
     }
-  }, [isLoggedIn]);
-
-  //Fetch transactions useEffect
-  useEffect(() => {
     async function fetchTransactions() {
       try {
-        const authTokenFromCookie = Cookies.get("auth_token");
+        const authTokenFromCookie = Cookies.get("access_token");
         const requestHeaders = {
           Authorization: `Bearer ${authTokenFromCookie}`,
         };
@@ -37,83 +33,28 @@ export default function HomePage() {
         const response = await axios.get("http://localhost:3333/transaction", {
           headers: requestHeaders,
         });
-
         setTransactions(response.data);
-
-        console.log(transactions);
       } catch (error) {
         console.log(error);
       }
     }
+
     fetchTransactions();
   }, []);
 
-  async function addNewTransaction(newTransaction) {
-    try {
-      const authTokenFromCookie = Cookies.get("auth_token");
-      const requestHeaders = {
-        Authorization: `Bearer ${authTokenFromCookie}`,
-      };
-
-      const response = await axios.post(
-        "http://localhost:3333/transaction",
-        newTransaction,
-        {
-          headers: requestHeaders,
-        }
-      );
-
-      // Update the list of transactions with the new transaction
-      setTransactions([...transactions, response.data]);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  const rows = [
-    {
-      id: "uuid-1",
-      // userId: "user-1",
-      createdAt: "2023-08-11T10:00:00Z",
-      updatedAt: "2023-08-11T14:30:00Z",
-      category: "Expense",
-      amount: 250.75,
-      title: "Groceries",
-    },
-    {
-      id: "uuid-2",
-      // userId: "user-2",
-      createdAt: "2023-08-10T15:45:00Z",
-      updatedAt: "2023-08-11T12:15:00Z",
-      category: "Income",
-      amount: 1500.0,
-      title: "Salary",
-    },
-    {
-      id: "uuid-3",
-      // userId: "user-3",
-      createdAt: "2023-08-09T08:30:00Z",
-      updatedAt: "2023-08-11T11:45:00Z",
-      category: "Expense",
-      amount: 35.5,
-      title: "Coffee",
-    },
-    // Add more placeholder data as needed
-  ];
-
-  const handleLogout = () => {
+  function handleLogout() {
     Cookies.remove("access_token");
-    setIsLoggedIn(false);
-  };
 
-  const [openModal, setOpenModal] = useState(false);
+    navigate("/login");
+  }
 
-  const handleClickOpen = () => {
+  function handleClickOpen() {
     setOpenModal(true);
-  };
+  }
 
-  const handleClose = () => {
+  function handleClose() {
     setOpenModal(false);
-  };
+  }
 
   return (
     <Container
@@ -149,12 +90,8 @@ export default function HomePage() {
           Add Transaction
         </Button>
       </Stack>
-      <AddTransactionModal
-        openModal={openModal}
-        handleClose={handleClose}
-        // handleSubmit={handleSubmit}
-      />
-      <DataTable rows={rows} />
+      <AddTransactionModal openModal={openModal} handleClose={handleClose} />
+      <DataTable rows={transactions} />
     </Container>
   );
 }

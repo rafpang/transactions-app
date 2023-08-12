@@ -1,2 +1,2 @@
 import { atom } from "jotai";
-export const LoggedInAtom = atom(false); // Default value is false (not authenticated)
+export const LoggedInAtom = atom<boolean>(false); // Default value is false (not authenticated)
