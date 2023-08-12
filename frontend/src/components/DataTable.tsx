@@ -25,7 +25,13 @@ export default function DataTable({ rows }: { rows: IRowData[] }) {
     <Container
       sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
     >
-      <Container sx={[{ height: 400 }, { width: { md: "80%", xs: "100%" } }]}>
+      <Container
+        sx={{
+          width: "fit-content",
+
+          overflow: "hidden",
+        }}
+      >
         <DataGrid
           rows={rows}
           // columns={columns}

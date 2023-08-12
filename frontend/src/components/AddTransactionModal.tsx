@@ -5,7 +5,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { Box } from "@mui/material";
+import { Box, Container, Stack } from "@mui/material";
 
 interface IAddTransactionModal {
   openModal: boolean;
@@ -48,7 +48,7 @@ export default function AddTransactionModal({
         <DialogContentText>
           Enter the transaction details below.
         </DialogContentText>
-        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
           <TextField
             autoFocus
             margin="dense"
@@ -79,8 +79,12 @@ export default function AddTransactionModal({
             fullWidth
             variant="standard"
           />
-          <Button onClick={handleClose}>Close</Button>
-          <Button type="submit">Add</Button>
+          <Stack direction={"row-reverse"} mt={2}>
+            <Button onClick={handleClose} color="error">
+              Close
+            </Button>
+            <Button type="submit">Add</Button>
+          </Stack>
         </Box>
       </DialogContent>
     </Dialog>

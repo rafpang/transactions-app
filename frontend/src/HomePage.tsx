@@ -14,6 +14,8 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import AddTransactionModal from "./components/AddTransactionModal";
+import Navbar from "./components/Navbar";
+import StatCard from "./components/StatCard";
 
 export default function HomePage() {
   const [isLoggedIn, setIsLoggedIn] = useAtom(LoggedInAtom);
@@ -78,26 +80,31 @@ export default function HomePage() {
         alignItems: "center",
         justifyContent: "center",
         gap: 2,
+        width: "80%",
       }}
     >
+      <Navbar handleLogout={handleLogout} />
+      <Stack
+        direction={{ xs: "column", sm: "column", md: "row" }}
+        spacing={2}
+        // spacing={{ xs: 2, sm: 2, md: 2 }}
+        justifyContent={{ md: "space-around" }}
+        marginBottom={8}
+      >
+        <StatCard transactionType="Income" />
+        <StatCard transactionType="Overall" />
+        <StatCard transactionType="Expense" />
+      </Stack>
       <Stack
         direction={{ xs: "column", sm: "row" }}
-        spacing={{ xs: 2, sm: 13, md: 14 }}
+        spacing={{ xs: 2, sm: 2, md: 2 }}
       >
         <Button
           sx={{ width: "200px" }}
-          variant="contained"
+          variant="text"
           onClick={handleClickOpen}
         >
           Add Transaction
-        </Button>
-        <Button
-          sx={{ width: "200px" }}
-          variant="contained"
-          onClick={handleLogout}
-          color="error"
-        >
-          Logout
         </Button>
       </Stack>
       <AddTransactionModal
