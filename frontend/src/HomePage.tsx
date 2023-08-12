@@ -25,9 +25,8 @@ export default function HomePage() {
     }
     async function fetchTransactions() {
       try {
-        const authTokenFromCookie = Cookies.get("access_token");
         const requestHeaders = {
-          Authorization: `Bearer ${authTokenFromCookie}`,
+          Authorization: `Bearer ${authCookie}`,
         };
 
         const response = await axios.get("http://localhost:3333/transaction", {
