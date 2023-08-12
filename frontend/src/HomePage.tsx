@@ -12,11 +12,12 @@ import StatCard from "./components/StatCard";
 import axios from "axios";
 
 export default function HomePage() {
-  const [transactions, setTransactions] = useState([]);
+  const [transactions, setTransactions] = useState<any>([]);
   const [openModal, setOpenModal] = useState(false);
 
   const navigate = useNavigate();
-  // for new transsactions
+
+  // States for new transsactions
   const [transactionTitle, setTransactionTitle] = useState<string>("");
   const [transactionAmount, setTransactionAmount] = useState<string>("");
   const [transactionCategory, setTransactionCategory] = useState<string>("");
@@ -45,13 +46,38 @@ export default function HomePage() {
     fetchTransactions();
   }, []);
 
-  async function createNewTransaction() {
+  async function createNewTransaction(e: any) {
+    e.preventDefault();
     try {
       const authCookie = Cookies.get("access_token");
       const requestHeaders = {
         Authorization: `Bearer ${authCookie}`,
       };
-      const response = await axios.post("http://localhost:3333/transaction");
+      const parsedTransactionAmount = parseFloat(transactionAmount);
+      if (isNaN(parsedTransactionAmount)) {
+        console.log("transaction amount cannot be parsed!");
+        return;
+      }
+      const postData = {
+        title: transactionTitle,
+        category: transactionCategory,
+        amount: parsedTransactionAmount,
+      };
+      const newTransactionResponse = await axios.post(
+        "http://localhost:3333/transaction",
+        postData,
+        {
+          headers: requestHeaders,
+        }
+      );
+      setTransactions((currentTransactions: any) => [
+        ...currentTransactions,
+        newTransactionResponse.data,
+      ]);
+      setTransactionTitle("");
+      setTransactionAmount("");
+      setTransactionCategory("");
+      setOpenModal(false);
     } catch (error) {
       console.log(error);
     }
@@ -108,6 +134,12 @@ export default function HomePage() {
         openModal={openModal}
         handleClose={handleClose}
         createNewTransaction={createNewTransaction}
+        setTransactionAmount={setTransactionAmount}
+        setTransactionTitle={setTransactionTitle}
+        setTransactionCategory={setTransactionCategory}
+        transactionTitle={transactionTitle}
+        transactionAmount={transactionAmount}
+        transactionCategory={transactionCategory}
       />
       <DataTable rows={transactions} />
     </Container>

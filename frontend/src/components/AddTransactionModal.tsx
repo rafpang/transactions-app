@@ -16,39 +16,20 @@ interface IAddTransactionModal {
   setTransactionTitle: (e: string) => void;
   setTransactionAmount: (e: string) => void;
   setTransactionCategory: (e: string) => void;
+  createNewTransaction: (e: any) => void;
 }
 
 export default function AddTransactionModal({
   openModal,
   handleClose,
   transactionTitle,
+  createNewTransaction,
   transactionAmount,
   transactionCategory,
   setTransactionTitle,
   setTransactionAmount,
   setTransactionCategory,
 }: IAddTransactionModal) {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const parsedAmount = parseFloat(transactionAmount);
-
-    if (isNaN(parsedAmount)) {
-      console.log("Invalid amount input");
-      return;
-    }
-
-    const data = {
-      transactionTitle: transactionTitle,
-      transactionAmount: parsedAmount,
-      transactionCategory: transactionCategory,
-    };
-
-    console.log(data);
-    setTransactionTitle("");
-    setTransactionAmount("");
-    setTransactionCategory("");
-  };
-
   return (
     <Dialog open={openModal} onClose={handleClose}>
       <DialogTitle>Add Transaction</DialogTitle>
@@ -56,7 +37,12 @@ export default function AddTransactionModal({
         <DialogContentText>
           Enter the transaction details below.
         </DialogContentText>
-        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+        <Box
+          component="form"
+          noValidate
+          onSubmit={createNewTransaction}
+          sx={{ mt: 1 }}
+        >
           <TextField
             autoFocus
             margin="dense"
