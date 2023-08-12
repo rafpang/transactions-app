@@ -41,11 +41,34 @@ export default function HomePage() {
         setTransactions(response.data);
 
         console.log(transactions);
-      } catch (error) {}
+      } catch (error) {
+        console.log(error);
+      }
     }
     fetchTransactions();
   }, []);
 
+  async function addNewTransaction(newTransaction) {
+    try {
+      const authTokenFromCookie = Cookies.get("auth_token");
+      const requestHeaders = {
+        Authorization: `Bearer ${authTokenFromCookie}`,
+      };
+
+      const response = await axios.post(
+        "http://localhost:3333/transaction",
+        newTransaction,
+        {
+          headers: requestHeaders,
+        }
+      );
+
+      // Update the list of transactions with the new transaction
+      setTransactions([...transactions, response.data]);
+    } catch (error) {
+      console.log(error);
+    }
+  }
   const rows = [
     {
       id: "uuid-1",
