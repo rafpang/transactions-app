@@ -13,8 +13,8 @@ export default function App() {
       <ThemeProvider theme={defaultTheme}>
         <BrowserRouter>
           <Routes>
-            {/* <Route path="/login" element={<LoginPage />} /> */}
-            {/* <Route path="/signup" element={<SignUp />} /> */}
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignUp />} />
             <Route path="/" element={<HomePage />} />
           </Routes>
         </BrowserRouter>

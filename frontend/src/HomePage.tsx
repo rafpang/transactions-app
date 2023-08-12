@@ -6,26 +6,46 @@ import Button from "@mui/material/Button";
 import Cookies from "js-cookie";
 
 import DataTable from "./components/DataTable";
-import { Container, Divider, Stack } from "@mui/material";
-import TextField from "@mui/material/TextField";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
+import { Container, Stack } from "@mui/material";
+
 import AddTransactionModal from "./components/AddTransactionModal";
 import Navbar from "./components/Navbar";
 import StatCard from "./components/StatCard";
+import axios from "axios";
 
 export default function HomePage() {
   const [isLoggedIn, setIsLoggedIn] = useAtom(LoggedInAtom);
+  const [transactions, setTransactions] = useState([]);
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   if (isLoggedIn === false) {
-  //     navigate("/login");
-  //   }
-  // }, [isLoggedIn]);
+  // Login useEffect
+  useEffect(() => {
+    if (isLoggedIn === false) {
+      navigate("/login");
+    }
+  }, [isLoggedIn]);
+
+  //Fetch transactions useEffect
+  useEffect(() => {
+    async function fetchTransactions() {
+      try {
+        const authTokenFromCookie = Cookies.get("auth_token");
+        const requestHeaders = {
+          Authorization: `Bearer ${authTokenFromCookie}`,
+        };
+
+        const response = await axios.get("http://localhost:3333/transaction", {
+          headers: requestHeaders,
+        });
+
+        setTransactions(response.data);
+
+        console.log(transactions);
+      } catch (error) {}
+    }
+    fetchTransactions();
+  }, []);
+
   const rows = [
     {
       id: "uuid-1",
@@ -87,7 +107,6 @@ export default function HomePage() {
       <Stack
         direction={{ xs: "column", sm: "column", md: "row" }}
         spacing={2}
-        // spacing={{ xs: 2, sm: 2, md: 2 }}
         justifyContent={{ md: "space-around" }}
         marginBottom={8}
       >

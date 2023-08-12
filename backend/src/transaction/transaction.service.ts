@@ -64,14 +64,14 @@ export class TransactionService {
   }
 
   async deleteTransactionById(userId: string, transactionId: string) {
-    const Transaction = await this.prismaService.transaction.findUnique({
+    const transaction = await this.prismaService.transaction.findUnique({
       where: {
         transactionId: transactionId,
       },
     });
 
     // check if user owns the Transaction
-    if (!Transaction || Transaction.userId !== userId)
+    if (!transaction || transaction.userId !== userId)
       throw new ForbiddenException(
         "Access to resources is denied or not found"
       );
