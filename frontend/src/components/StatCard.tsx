@@ -1,51 +1,61 @@
-import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
 
-const bull = (
-  <Box
-    component="span"
-    sx={{ display: "inline-block", transform: "scale(0.8)" }}
-  ></Box>
-);
+import CardContent from "@mui/material/CardContent";
+
+import Typography from "@mui/material/Typography";
+import { Container } from "@mui/material";
 
 interface IStatCard {
   transactionType: string;
+  value: number;
 }
 
-export default function StatCard({ transactionType }: IStatCard) {
+export default function StatCard({ transactionType, value }: IStatCard) {
   return (
     <Card sx={{ minWidth: 275 }}>
       <CardContent>
-        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-          Word of the Day
-        </Typography>
         <Typography
-          variant="h5"
+          gutterBottom
+          sx={{ fontSize: "1.2rem" }}
           component="div"
           color={
             transactionType === "Income"
-              ? "green"
+              ? "#8bc34a"
               : transactionType === "Expense"
-              ? "red"
+              ? "#f50057"
               : "black"
           }
           fontWeight={"bold"}
         >
           {transactionType}
         </Typography>
-
-        <Typography variant="body2" color="green">
-          well meaning and kindly.
-          <br />
+        <Typography sx={{ mb: 1.5 }} color="text.secondary">
+          {transactionType} amount in SGD
         </Typography>
+        <Container
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Typography
+            gutterBottom
+            sx={{ fontSize: "1.7rem" }}
+            component="div"
+            color={
+              transactionType === "Income"
+                ? "#8bc34a"
+                : transactionType === "Expense"
+                ? "#f50057"
+                : "black"
+            }
+            fontWeight={"bold"}
+          >
+            {value}
+          </Typography>
+        </Container>
       </CardContent>
-      <CardActions>
-        <Button size="small">Learn More</Button>
-      </CardActions>
     </Card>
   );
 }

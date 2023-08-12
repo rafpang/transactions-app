@@ -91,9 +91,9 @@ export default function HomePage() {
         justifyContent={{ md: "space-around" }}
         marginBottom={8}
       >
-        <StatCard transactionType="Income" />
-        <StatCard transactionType="Overall" />
-        <StatCard transactionType="Expense" />
+        <StatCard transactionType="Income" value={20} />
+        <StatCard transactionType="Overall" value={20} />
+        <StatCard transactionType="Expense" value={20} />
       </Stack>
       <Stack
         direction={{ xs: "column", sm: "row" }}
