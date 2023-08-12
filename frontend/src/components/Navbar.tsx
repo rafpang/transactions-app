@@ -13,7 +13,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import { Logout } from "@mui/icons-material";
 
 interface Props {
   /**
@@ -25,7 +24,6 @@ interface Props {
 }
 
 const drawerWidth = 240;
-const navItems = ["Home", "About", "Contact"];
 
 export default function Navbar(props: Props) {
   const { window } = props;

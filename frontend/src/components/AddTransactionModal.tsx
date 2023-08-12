@@ -1,25 +1,33 @@
-import React, { useState } from "react";
+// import React,  from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { Box, Container, Stack } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 
 interface IAddTransactionModal {
   openModal: boolean;
   handleClose: () => void;
+  transactionTitle: string;
+  transactionAmount: string;
+  transactionCategory: string;
+  setTransactionTitle: (e: string) => void;
+  setTransactionAmount: (e: string) => void;
+  setTransactionCategory: (e: string) => void;
 }
 
 export default function AddTransactionModal({
   openModal,
   handleClose,
+  transactionTitle,
+  transactionAmount,
+  transactionCategory,
+  setTransactionTitle,
+  setTransactionAmount,
+  setTransactionCategory,
 }: IAddTransactionModal) {
-  const [transactionTitle, setTransactionTitle] = useState<string>("");
-  const [transactionAmount, setTransactionAmount] = useState<string>("");
-  const [transactionCategory, setTransactionCategory] = useState<string>("");
-
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const parsedAmount = parseFloat(transactionAmount);

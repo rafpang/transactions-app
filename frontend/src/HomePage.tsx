@@ -16,6 +16,10 @@ export default function HomePage() {
   const [openModal, setOpenModal] = useState(false);
 
   const navigate = useNavigate();
+  // for new transsactions
+  const [transactionTitle, setTransactionTitle] = useState<string>("");
+  const [transactionAmount, setTransactionAmount] = useState<string>("");
+  const [transactionCategory, setTransactionCategory] = useState<string>("");
 
   useEffect(() => {
     const authCookie = Cookies.get("access_token");
@@ -40,6 +44,18 @@ export default function HomePage() {
 
     fetchTransactions();
   }, []);
+
+  async function createNewTransaction() {
+    try {
+      const authCookie = Cookies.get("access_token");
+      const requestHeaders = {
+        Authorization: `Bearer ${authCookie}`,
+      };
+      const response = await axios.post("http://localhost:3333/transaction");
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   function handleLogout() {
     Cookies.remove("access_token");
@@ -88,7 +104,11 @@ export default function HomePage() {
           Add Transaction
         </Button>
       </Stack>
-      <AddTransactionModal openModal={openModal} handleClose={handleClose} />
+      <AddTransactionModal
+        openModal={openModal}
+        handleClose={handleClose}
+        createNewTransaction={createNewTransaction}
+      />
       <DataTable rows={transactions} />
     </Container>
   );
