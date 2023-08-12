@@ -44,7 +44,6 @@ export default function HomePage() {
 
   function handleLogout() {
     Cookies.remove("access_token");
-
     navigate("/login");
   }
 

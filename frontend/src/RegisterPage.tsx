@@ -58,6 +58,7 @@ export default function RegisterPage() {
       Cookies.set("access_token", accessToken, {
         expires: expirationTimeInSeconds / (60 * 60 * 24),
       });
+      navigate("/");
     } catch (error) {
       setRegisterError(true);
     }
