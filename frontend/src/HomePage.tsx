@@ -14,6 +14,7 @@ import axios from "axios";
 export default function HomePage() {
   const [transactions, setTransactions] = useState<any>([]);
   const [openModal, setOpenModal] = useState(false);
+  const [transactionsSummary, setTransactionsSummary] = useState<any>({});
 
   const navigate = useNavigate();
 
@@ -42,8 +43,30 @@ export default function HomePage() {
         console.log(error);
       }
     }
+    async function getTransactionSummary() {
+      try {
+        const requestHeaders = {
+          Authorization: `Bearer ${authCookie}`,
+        };
+
+        const response = await axios.get(
+          "http://localhost:3333/transaction/summary",
+          {
+            headers: requestHeaders,
+          }
+        );
+        setTransactionsSummary({
+          incomeSum: response.data.incomeSum,
+          expenseSum: response.data.expenseSum,
+          lumpedTransactionSummary: response.data.transactionSummary,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
 
     fetchTransactions();
+    getTransactionSummary();
   }, []);
 
   async function createNewTransaction(e: any) {
@@ -114,9 +137,18 @@ export default function HomePage() {
         justifyContent={{ md: "space-around" }}
         marginBottom={8}
       >
-        <StatCard transactionType="Income" value={20} />
-        <StatCard transactionType="Overall" value={20} />
-        <StatCard transactionType="Expense" value={20} />
+        <StatCard
+          transactionType="Income"
+          value={transactionsSummary.incomeSum}
+        />
+        <StatCard
+          transactionType="Overall"
+          value={transactionsSummary.lumpedTransactionSummary}
+        />
+        <StatCard
+          transactionType="Expense"
+          value={transactionsSummary.expenseSum}
+        />
       </Stack>
       <Stack
         direction={{ xs: "column", sm: "row" }}

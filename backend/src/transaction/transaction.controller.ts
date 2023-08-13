@@ -25,6 +25,12 @@ export class TransactionController {
   getTransaction(@GetUser("userId") userId: string) {
     return this.transactionService.getTransactions(userId);
   }
+
+  @Get("summary")
+  getTransactionSummary(@GetUser("userId") userId: string) {
+    return this.transactionService.getTransactionSummary(userId);
+  }
+
   @Get(":id")
   getTransactionById(
     @GetUser("userId") userId: string,

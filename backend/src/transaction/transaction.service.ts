@@ -23,6 +23,43 @@ export class TransactionService {
       },
     });
   }
+  public async getTransactionSummary(userId: string) {
+    try {
+      const expenseAggregation = await this.prismaService.transaction.aggregate(
+        {
+          _sum: {
+            amount: true,
+          },
+          where: {
+            userId: userId,
+            category: "Expense",
+          },
+        }
+      );
+      const incomeAggregation = await this.prismaService.transaction.aggregate({
+        _sum: {
+          amount: true,
+        },
+        where: {
+          userId: userId,
+          category: "Income",
+        },
+      });
+
+      const expenseSum = expenseAggregation?._sum?.amount || 0;
+      const incomeSum = incomeAggregation?._sum?.amount || 0;
+      const transactionSummary = incomeSum - expenseSum;
+
+      return {
+        incomeSum: incomeSum,
+        expenseSum: expenseSum,
+        transactionSummary: transactionSummary,
+      };
+    } catch (error) {
+      console.error("Error fetching transaction summary:", error);
+      throw new Error("Failed to fetch transaction summary.");
+    }
+  }
 
   async createTransaction(userId: string, dto: CreateTransactionDto) {
     const transaction = await this.prismaService.transaction.create({
