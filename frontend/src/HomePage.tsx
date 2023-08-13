@@ -25,6 +25,7 @@ export default function HomePage() {
 
   useEffect(() => {
     const authCookie = Cookies.get("access_token");
+
     if (!authCookie) {
       navigate("/login");
       return;
@@ -43,6 +44,12 @@ export default function HomePage() {
         console.log(error);
       }
     }
+
+    fetchTransactions();
+  }, []);
+
+  useEffect(() => {
+    const authCookie = Cookies.get("access_token");
     async function getTransactionSummary() {
       try {
         const requestHeaders = {
@@ -64,10 +71,8 @@ export default function HomePage() {
         console.log(error);
       }
     }
-
-    fetchTransactions();
     getTransactionSummary();
-  }, []);
+  }, [transactions]);
 
   async function createNewTransaction(e: any) {
     e.preventDefault();

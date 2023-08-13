@@ -1,4 +1,4 @@
-// import React,  from "react";
+// import React from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -6,6 +6,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { Box, Stack } from "@mui/material";
+import MenuItem from "@mui/material/MenuItem"; // Import MenuItem
 
 interface IAddTransactionModal {
   openModal: boolean;
@@ -63,7 +64,9 @@ export default function AddTransactionModal({
             fullWidth
             variant="standard"
           />
+          {/* Use a dropdown (select) for transaction category */}
           <TextField
+            select
             autoFocus
             margin="dense"
             id="category"
@@ -72,7 +75,10 @@ export default function AddTransactionModal({
             value={transactionCategory}
             fullWidth
             variant="standard"
-          />
+          >
+            <MenuItem value="Expense">Expense</MenuItem>
+            <MenuItem value="Income">Income</MenuItem>
+          </TextField>
           <Stack direction={"row-reverse"} mt={2}>
             <Button onClick={handleClose} color="error">
               Close
